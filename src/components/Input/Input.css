@@ -1,0 +1,17 @@
+.Input {
+    padding: 4px 4px;
+    width: 96%;
+    height: 26px;
+
+    font-size: 16px;
+
+    border: 1px solid transparent;
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+
+    outline: none;
+}
+
+.Input:focus {
+    box-shadow: 0 0 1px 4px rgb(108, 118, 252);
+}

@@ -1,0 +1,47 @@
+.ListItem {
+    position: relative;
+
+    margin-top: 16px;
+    padding: 10px 0 10px 16px;
+
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+
+    cursor: pointer;
+}
+
+.ListItem_done {
+    background-color: rgb(99, 216, 177);
+}
+
+.ListItem_active {
+    background-color: rgb(129, 129, 129);
+}
+
+.ListItem__delete-button {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+
+    width: 30px;
+    height: 30px;
+
+    color: red;
+    font-size: 22px;
+    font-weight: bold;
+
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 50%;
+
+    cursor: pointer;
+    outline: none;
+
+    transition: box-shadow 0.2s ease-in; 
+
+    transform: rotate(45deg)
+}
+
+.ListItem__delete-button:hover {
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}

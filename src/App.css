@@ -1,0 +1,18 @@
+.App__header {
+  display: flex;
+  height: 50px; 
+  justify-content: center;
+  align-items: center;
+
+  color: #ffffff;
+
+  background-color: #078dec;
+}
+
+.App__title {
+  margin: 0;
+}
+
+.App__main {
+  padding: 20px;
+}

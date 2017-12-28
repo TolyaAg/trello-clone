@@ -1,0 +1,80 @@
+.CreateList {
+    max-width: 300px;
+    width: 100%;
+
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+
+    border-radius: 5px;
+
+    transition: transform 0.4s ease;
+}
+
+.CreateList:hover {
+    transform: scale(1.1)
+}
+
+.CreateList__button {
+    width: 100%;
+    height: 50px;
+
+    color: #ffffff;
+    /* font-weight: bold; */
+    font-size: 18px;
+
+    background-color: #0bca8a;
+    border: 1px solid #0bca8a;
+    border-radius: 5px;
+
+    cursor: pointer;
+    outline: none;
+}
+
+.CreateList__button_active {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.CreateList__new-board {
+    padding: 30px;
+
+    color: #ffffff;
+
+    background-color: #0bca8a;
+    border-top: 2px solid #f5ebeb;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.CreateList__input {
+    margin-top: 16px;
+}
+
+.CreateList__buttons-wrapper {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.CreateList__button-cancel {
+    padding-right: 16px;
+    color: #ffffff;
+    font-family: inherit;
+    font-weight: bold;
+
+    background-color: transparent;
+    border: none;
+
+    cursor: pointer;
+}
+
+.CreateList__button-create {
+    padding: 12px 30px;
+
+    font-family: inherit;
+    font-weight: bold;
+
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+
+    cursor: pointer;
+}

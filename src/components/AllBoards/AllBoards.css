@@ -1,0 +1,9 @@
+.AllBoards {
+    display: flex;
+
+    flex-wrap: wrap;
+}
+
+.AllBoards__board {
+  margin: 0 24px 24px 0;
+}
