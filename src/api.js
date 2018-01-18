@@ -1,147 +1,139 @@
+import { v4 } from "uuid";
+
 function Boards() {
+  let boards = JSON.parse(localStorage.getItem("boards"));
 
-    let boards = JSON.parse(localStorage.getItem('boards'));
+  function getBoards() {
+    return boards;
+  }
 
-    function getBoards() {
-        return boards;
+  function getBoard(id) {
+    let board = {};
+
+    for (let i = 0; i < boards.length; i++) {
+      if (boards[i].id === id) {
+        board = boards[i];
+        break;
+      }
     }
 
-    function getBoard(name) {
+    return board;
+  }
 
-        let board = {};
-    
-        for (let i = 0; i < boards.length; i++) {
-            if(boards[i].name === name) {
-                board = boards[i];
-                break;
-            }
-        }
-    
-        return board
+  function getLists(boardId) {
+    return getBoard(boardId).lists;
+  }
+
+  function getList(boardId, listName) {
+    let list = null;
+    let lists = getLists(boardId);
+
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        list = lists[i];
+        break;
+      }
     }
 
-    function getLists(boardName) {
-        return getBoard(boardName).lists;
+    return list;
+  }
+
+  function getTasks(boardName, listName) {
+    return getList(boardName, listName).tasks;
+  }
+
+  function addBoard(boardName) {
+    boards.push({ id: v4(), name: boardName, lists: [] });
+
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
+
+  function addList(boardName, listName) {
+    let board = getBoard(boardName);
+    board.lists.push({ name: listName, tasks: [] });
+
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
+
+  function addTask(boardName, listName, taskName) {
+    let list = getList(boardName, listName);
+    list.tasks.push({ name: taskName, complited: false });
+
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
+
+  function deleteBoard(name) {
+    let index = null;
+
+    for (let i = 0; i < boards.length; i++) {
+      if (boards[i].name === name) {
+        index = i;
+        break;
+      }
     }
 
-    function getList(boardName, listName) {
+    boards.splice(index, 1);
 
-        let list = null;
-        let lists = getLists(boardName);
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
 
-        for (let i = 0; i < lists.length; i++) {
-            if(lists[i].name === listName) {
-                list = lists[i];
-                break;
-            }
-        }
+  function deleteList(boardName, listName) {
+    let lists = getLists(boardName);
+    let index = null;
 
-        return list;
+    for (let i = 0; i < lists.length; i++) {
+      if (lists[i].name === listName) {
+        index = i;
+        break;
+      }
     }
 
-    function getTasks(boardName, listName) {
-        return getList(boardName, listName).tasks;
+    lists.splice(index, 1);
+
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
+
+  function deleteItem(boardName, listName, itemName) {
+    let tasks = getTasks(boardName, listName);
+    let index = null;
+
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].name === itemName) {
+        index = i;
+        break;
+      }
     }
 
-    function addBoard(boardName) {
+    tasks.splice(index, 1);
 
-        boards.push( {name: boardName, lists: []} );
-    
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
-    
-    function addList(boardName, listName) {
-    
-        let board = getBoard(boardName);
-        board.lists.push({name: listName, tasks:[]})
-    
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
 
-    function addTask(boardName, listName, taskName) {
+  function changeItemStatus(boardName, listName, itemName) {
+    let tasks = getTasks(boardName, listName);
 
-        let list = getList(boardName, listName);
-        list.tasks.push({name: taskName, complited: false})
-
-        localStorage.setItem('boards', JSON.stringify(boards));
+    for (let i = 0; i < tasks.length; i++) {
+      if (tasks[i].name === itemName) {
+        tasks[i].complited = !tasks[i].complited;
+        break;
+      }
     }
 
-    function deleteBoard(name) {
+    localStorage.setItem("boards", JSON.stringify(boards));
+  }
 
-        let index = null;
-
-        for (let i = 0; i < boards.length; i++) {
-            if(boards[i].name === name) {
-                index = i;
-                break;
-            }
-        }
-
-        boards.splice(index, 1);
-
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
-
-    function deleteList(boardName, listName) {
-
-        let lists = getLists(boardName);
-        let index = null;
-
-        for (let i = 0; i < lists.length; i++) {
-            if(lists[i].name === listName) {
-                index = i;
-                break;
-            }
-        }
-
-        lists.splice(index, 1);
-
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
-
-    function deleteItem(boardName, listName, itemName) {
-        let tasks = getTasks(boardName, listName);
-        let index = null;
-
-        for (let i = 0; i < tasks.length; i++) {
-            if(tasks[i].name === itemName) {
-                index = i;
-                break;
-            }
-        }
-
-        tasks.splice(index, 1);
-
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
-
-    function changeItemStatus(boardName, listName, itemName) {
-        let tasks = getTasks(boardName, listName);
-
-        for (let i = 0; i < tasks.length; i++) {
-            if(tasks[i].name === itemName) {
-                tasks[i].complited = !tasks[i].complited;
-                break;
-            }
-        }
-
-        localStorage.setItem('boards', JSON.stringify(boards));
-    }
-
-    return {
-        getBoards,
-        getBoard,
-        getLists,
-        addBoard,
-        addList,
-        addTask,
-        deleteBoard,
-        deleteList,
-        deleteItem,
-        changeItemStatus
-    }
+  return {
+    getBoards,
+    getBoard,
+    getLists,
+    addBoard,
+    addList,
+    addTask,
+    deleteBoard,
+    deleteList,
+    deleteItem,
+    changeItemStatus
+  };
 }
 
-export {
-    Boards
-}
+export { Boards };

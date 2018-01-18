@@ -1,82 +1,89 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-import { Boards } from '../../api';
+import { Boards } from "../../api";
 
-import List from '../List/List';
-import CreateList from '../CreateList/CreateList'
+import List from "../List/List";
+import CreateList from "../CreateList/CreateList";
 
-import './ActiveBoard.css';
+import "./ActiveBoard.css";
 
 class ActiveBoard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            lists: Boards().getLists(props.match.params.name)
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      boardId: this.props.match.params.id,
+      lists: Boards().getLists(this.props.match.params.id)
+    };
 
-        this.addList = this.addList.bind(this)
-        this.addTask = this.addTask.bind(this)
-        this.deleteList = this.deleteList.bind(this)
-        this.deleteItem = this.deleteItem.bind(this)
-        this.changeItemStatus = this.changeItemStatus.bind(this)
-    }
+    this.addList = this.addList.bind(this);
+    this.addTask = this.addTask.bind(this);
+    this.deleteList = this.deleteList.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.changeItemStatus = this.changeItemStatus.bind(this);
+    this.updateState = this.updateState.bind(this);
+  }
 
-    addList(listName) {
-        const boardName = this.props.match.params.name;
-        Boards().addList(boardName, listName)
-        this.setState({
-            lists: Boards().getLists(boardName)
-        })
-    }
+  updateState(boardId) {
+    this.setState({
+      lists: Boards().getLists(boardId)
+    });
+  }
 
-    addTask(listName, taskName) {
-        const boardName = this.props.match.params.name;
-        Boards().addTask(boardName, listName, taskName)
-        this.setState({
-            lists: Boards().getLists(boardName)
-        })
-    }
+  addList(listName) {
+    const { boardId } = this.state;
+    Boards().addList(boardId, listName);
+    this.updateState(boardId);
+  }
 
-    deleteList(listName) {
-        const boardName = this.props.match.params.name;
-        Boards().deleteList(boardName, listName)
-        this.setState({
-            lists: Boards().getLists(boardName)
-        })
-    }
+  addTask(listName, taskName) {
+    const { boardId } = this.state;
+    Boards().addTask(boardId, listName, taskName);
+    this.updateState(boardId);
+  }
 
-    deleteItem(listName, itemName) {
-        const boardName = this.props.match.params.name;
-        Boards().deleteItem(boardName, listName, itemName)
-        this.setState({
-            lists: Boards().getLists(boardName)
-        })
-    }
+  deleteList(listName) {
+    const { boardId } = this.state;
+    Boards().deleteList(boardId, listName);
+    this.updateState(boardId);
+  }
 
-    changeItemStatus(listName, itemName) {
-        const boardName = this.props.match.params.name;
-        Boards().changeItemStatus(boardName, listName, itemName)
-        this.setState({
-            lists: Boards().getLists(boardName)
-        })
-    }
+  deleteItem(listName, itemName) {
+    const { boardId } = this.state;
+    Boards().deleteItem(boardId, listName, itemName);
+    this.updateState(boardId);
+  }
 
-    render() {
-        const { lists } = this.state
+  changeItemStatus(listName, itemName) {
+    const { boardId } = this.state;
+    Boards().changeItemStatus(boardId, listName, itemName);
+    this.updateState(boardId);
+  }
 
-        const listsItem = lists.map((list) => (
-            <List key={list.name} {...list} addTask={this.addTask} deleteList={this.deleteList} deleteItem={this.deleteItem} changeItemStatus={this.changeItemStatus}/>
-        ))
+  render() {
+    const { lists } = this.state;
 
-        return (
-            <div className="ActiveBoard">
-                <Link to='/'><button className="ActiveBoard__button-back">Back</button></Link>
-                {listsItem}
-                <CreateList addNewList={this.addList}/>
-            </div>
-        )
-    }
-};
+    const listsItem = lists.map(list => (
+      <List
+        {...list}
+        key={list.name}
+        addTask={this.addTask}
+        deleteList={this.deleteList}
+        deleteItem={this.deleteItem}
+        changeItemStatus={this.changeItemStatus}
+      />
+    ));
+
+    return (
+      <div className="ActiveBoard">
+        <Link to="/">
+          <button className="ActiveBoard__button-back">Back</button>
+        </Link>
+        {listsItem}
+        <CreateList addNewList={this.addList} />
+      </div>
+    );
+  }
+}
 
 export default ActiveBoard;
