@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-import CreateBoard from "../CreateBoard/CreateBoard";
-import Board from "../Board/Board";
+import CreateBoard from './CreateBoard/CreateBoard';
+import Board from './Board/Board';
 
-import { Boards } from "../../api";
+import { Boards } from '../../api';
 
-import "./AllBoards.css";
+import './AllBoards.css';
 
 class AllBoard extends Component {
   constructor() {
@@ -37,7 +37,7 @@ class AllBoard extends Component {
 
   render() {
     const { boards } = this.state;
-    const boardsList = boards.map(board => (
+    const boardsList = boards.boards.map(board => (
       <Link
         to={`/board/${board.id}`}
         key={board.id}

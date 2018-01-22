@@ -1,43 +1,23 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { createStore } from 'redux';
 
-import "./index.css";
+import './index.css';
 
-import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
 
-import { v4 } from "uuid";
+import reducer from './reducers';
 
-if (localStorage.getItem("boards") === null) {
-  const boards = [
-    {
-      id: v4(),
-      name: "First",
-      lists: [
-        {
-          name: "Mondey",
-          tasks: [
-            { name: "Up", complited: true },
-            { name: "Eat", complited: false }
-          ]
-        },
-        {
-          name: "Thusday",
-          tasks: [{ name: "Not start yet", complited: false }]
-        }
-      ]
-    }
-  ];
-  const serialBoards = JSON.stringify(boards);
+let store = createStore(reducer);
 
-  localStorage.setItem("boards", serialBoards);
-}
+console.log(store.getState());
 
 ReactDOM.render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 registerServiceWorker();
