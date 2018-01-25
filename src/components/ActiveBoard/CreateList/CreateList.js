@@ -1,62 +1,63 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import Input from '../../Input/Input'
+import Input from '../../Input/Input';
 
-import './CreateList.css'
+import './CreateList.css';
 
 class CreateList extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       addList: false,
       listName: ''
-    }
+    };
 
-    this.handleClick = this.handleClick.bind(this)
-    this.cancelAddList = this.cancelAddList.bind(this)
-    this.inputChange = this.inputChange.bind(this)
-    this.addList = this.addList.bind(this)
-    this.inputKey = this.inputKey.bind(this)
+    this.handleClick = this.handleClick.bind(this);
+    this.cancelAddList = this.cancelAddList.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.addList = this.addList.bind(this);
+    this.inputKey = this.inputKey.bind(this);
   }
 
   handleClick() {
     this.setState(prevState => ({
       addList: !prevState.addList
-    }))
+    }));
   }
 
   cancelAddList() {
     this.setState({
       addList: false
-    })
+    });
   }
 
   inputChange(e) {
     this.setState({
       listName: e.target.value
-    })
+    });
   }
 
   addList() {
-    this.props.addNewList(this.state.listName)
+    this.props.addNewList(this.props.boardId, this.state.listName);
     this.setState({
       addList: false,
       listName: ''
-    })
+    });
   }
 
   inputKey(e) {
     if (e.key === 'Enter') {
-      this.addList()
+      this.addList();
     }
   }
 
   render() {
-    const { addList, listName } = this.state
-    const { className } = this.props
+    const { addList, listName } = this.state;
+    const { className } = this.props;
     const buttonClass = addList
       ? `CreateList__button CreateList__button_active`
-      : `CreateList__button`
+      : `CreateList__button`;
+
     return (
       <div className={`CreateList ${className}`}>
         <button className={buttonClass} onClick={this.handleClick}>
@@ -88,8 +89,8 @@ class CreateList extends Component {
           </div>
         )}
       </div>
-    )
+    );
   }
 }
 
-export default CreateList
+export default CreateList;

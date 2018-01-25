@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-import "./App.css";
+import './App.css';
 
-import AllBoards from "./components/AllBoards/AllBoards";
-import ActiveBoard from "./components/ActiveBoard/ActiveBoard";
+import AllBoards from './containers/AllBoardsContainer';
+import ActiveBoard from './containers/ActiveBoardContainer';
 
 class App extends Component {
   render() {

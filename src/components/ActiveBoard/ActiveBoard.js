@@ -1,78 +1,61 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-import { Boards } from '../../api'
+import { Boards } from '../../api';
 
-import List from './List/List'
-import CreateList from './CreateList/CreateList'
+import List from './List/List';
+import CreateList from './CreateList/CreateList';
 
-import './ActiveBoard.css'
+import './ActiveBoard.css';
 
 class ActiveBoard extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      boardId: this.props.match.params.id,
-      lists: Boards().getLists(this.props.match.params.id)
-    }
+      boardId: this.props.match.params.id
+    };
 
-    this.addList = this.addList.bind(this)
-    this.addTask = this.addTask.bind(this)
-    this.deleteList = this.deleteList.bind(this)
-    this.deleteItem = this.deleteItem.bind(this)
-    this.changeItemStatus = this.changeItemStatus.bind(this)
-    this.updateState = this.updateState.bind(this)
-  }
-
-  updateState(boardId) {
-    this.setState({
-      lists: Boards().getLists(boardId)
-    })
-  }
-
-  addList(listName) {
-    const { boardId } = this.state
-    Boards().addList(boardId, listName)
-    this.updateState(boardId)
+    this.addTask = this.addTask.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.changeItemStatus = this.changeItemStatus.bind(this);
   }
 
   addTask(listName, taskName) {
-    const { boardId } = this.state
-    Boards().addTask(boardId, listName, taskName)
-    this.updateState(boardId)
-  }
-
-  deleteList(listName) {
-    const { boardId } = this.state
-    Boards().deleteList(boardId, listName)
-    this.updateState(boardId)
+    const { boardId } = this.state;
+    Boards().addTask(boardId, listName, taskName);
   }
 
   deleteItem(listName, itemName) {
-    const { boardId } = this.state
-    Boards().deleteItem(boardId, listName, itemName)
-    this.updateState(boardId)
+    const { boardId } = this.state;
+    Boards().deleteItem(boardId, listName, itemName);
   }
 
   changeItemStatus(listName, itemName) {
-    const { boardId } = this.state
-    Boards().changeItemStatus(boardId, listName, itemName)
-    this.updateState(boardId)
+    const { boardId } = this.state;
+    Boards().changeItemStatus(boardId, listName, itemName);
   }
 
   render() {
-    const { lists } = this.state
+    const { lists, addList, deleteList, tasks } = this.props;
+    const { boardId } = this.state;
 
-    const listsItem = lists.map(list => (
-      <List
-        {...list}
-        key={list.name}
-        addTask={this.addTask}
-        deleteList={this.deleteList}
-        deleteItem={this.deleteItem}
-        changeItemStatus={this.changeItemStatus}
-      />
-    ))
+    const listsItem = lists.map(list => {
+      if (list.boardId === boardId) {
+        return (
+          <List
+            {...list}
+            key={list.id}
+            tasks={tasks}
+            addTask={this.addTask}
+            deleteList={deleteList}
+            deleteItem={this.deleteItem}
+            changeItemStatus={this.changeItemStatus}
+          />
+        );
+      } else {
+        return null;
+      }
+    });
 
     return (
       <div className="ActiveBoard">
@@ -80,10 +63,10 @@ class ActiveBoard extends Component {
           <button className="ActiveBoard__button-back">Back</button>
         </Link>
         {listsItem}
-        <CreateList addNewList={this.addList} />
+        <CreateList addNewList={addList} boardId={boardId} />
       </div>
-    )
+    );
   }
 }
 
-export default ActiveBoard
+export default ActiveBoard;

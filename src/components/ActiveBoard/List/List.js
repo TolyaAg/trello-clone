@@ -14,7 +14,6 @@ class List extends Component {
 
     this.inputChange = this.inputChange.bind(this);
     this.inputKey = this.inputKey.bind(this);
-    this.deleteList = this.deleteList.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.changeItemStatus = this.changeItemStatus.bind(this);
   }
@@ -34,10 +33,6 @@ class List extends Component {
     }
   }
 
-  deleteList() {
-    this.props.deleteList(this.props.name);
-  }
-
   deleteItem(itemName) {
     this.props.deleteItem(this.props.name, itemName);
   }
@@ -48,10 +43,10 @@ class List extends Component {
 
   render() {
     const { taskName } = this.state;
-    const { name, tasks } = this.props;
+    const { name, tasks, deleteList, id } = this.props;
     const items = tasks.map(task => (
       <ListItem
-        key={task.name}
+        key={task.id}
         {...task}
         deleteItem={this.deleteItem}
         changeItemStatus={this.changeItemStatus}
@@ -61,7 +56,12 @@ class List extends Component {
       <div className="List">
         <div className="List__title">
           {name}
-          <button className="List__delete-button" onClick={this.deleteList}>
+          <button
+            className="List__delete-button"
+            onClick={e => {
+              deleteList(id);
+            }}
+          >
             +
           </button>
         </div>
