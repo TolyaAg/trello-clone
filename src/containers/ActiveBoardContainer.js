@@ -1,23 +1,20 @@
 import { connect } from 'react-redux';
-import { addList, deleteList } from '../actions/activeBoardActions';
+import { bindActionCreators } from 'redux';
+import * as actions from '../actions/activeBoardActions';
 import ActiveBoard from '../components/ActiveBoard/ActiveBoard';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    lists: state.lists,
-    tasks: state.tasks
+    boardId: ownProps.match.params.id,
+    lists: state.boards.byIds[ownProps.match.params.id].lists.map(
+      listId => state.lists.byIds[listId]
+    ),
+    tasks: []
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    addList: (boardId, name) => {
-      dispatch(addList(boardId, name));
-    },
-    deleteList: id => {
-      dispatch(deleteList(id));
-    }
-  };
+  return bindActionCreators(actions, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActiveBoard);

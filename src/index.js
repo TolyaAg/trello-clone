@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import { createLogger } from 'redux-logger';
 
 import './index.css';
 
@@ -11,9 +12,9 @@ import registerServiceWorker from './registerServiceWorker';
 
 import reducer from './reducers';
 
-let store = createStore(reducer);
+const logger = createLogger();
 
-console.log(store.getState());
+let store = createStore(reducer, applyMiddleware(logger));
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
-import { addBoard, deleteBoard } from '../actions/boardActions';
+import { bindActionCreators } from 'redux';
+import * as actions from '../actions/boardActions';
 import AllBoards from '../components/AllBoards/AllBoards';
 
 const mapStateToProps = state => {
@@ -9,14 +10,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    addBoard: name => {
-      dispatch(addBoard(name));
-    },
-    deleteBoard: id => {
-      dispatch(deleteBoard(id));
-    }
-  };
+  return bindActionCreators(actions, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllBoards);

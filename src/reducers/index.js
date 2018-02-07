@@ -5,73 +5,87 @@ import { ADD_LIST, DELETE_LIST } from '../constants/activeBoardConstants';
 import { v4 } from 'uuid';
 
 const initialState = () => {
-  let state = {};
+  let info = {};
   if (localStorage.getItem('boards') === null) {
-    state = {
-      boards: [
-        {
-          id: v4(),
-          name: 'First'
-        }
-      ],
-      lists: [],
-      tasks: []
+    const firstId = v4();
+    info = {
+      boards: {
+        byIds: {
+          [firstId]: {
+            id: firstId,
+            name: 'First',
+            lists: []
+          }
+        },
+        allIds: [firstId]
+      },
+      lists: { byIds: {}, allIds: [] },
+      tasks: { byIds: {}, allIds: [] }
     };
-    const serialBoards = JSON.stringify(state);
+    const serialBoards = JSON.stringify(info);
 
     localStorage.setItem('boards', serialBoards);
   } else {
-    state = JSON.parse(localStorage.getItem('boards'));
+    info = JSON.parse(localStorage.getItem('boards'));
   }
 
-  return state;
-};
-
-const deleteItem = (items, id) => {
-  let index = null;
-
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].id === id) {
-      index = i;
-      break;
-    }
-  }
-
-  items.splice(index, 1);
-
-  return items;
+  return info;
 };
 
 function reducer(state = initialState(), action) {
   switch (action.type) {
     case ADD_BOARD:
+      const newId = v4();
       return Object.assign({}, state, {
-        boards: [
-          ...state.boards,
-          {
-            id: v4(),
-            name: action.name
-          }
-        ]
+        boards: {
+          byIds: {
+            ...state.boards.byIds,
+            [newId]: {
+              id: newId,
+              name: action.name,
+              lists: []
+            }
+          },
+          allIds: [...state.boards.allIds, newId]
+        }
       });
     case DELETE_BOARD:
+      const { boards } = state;
+      delete boards.byIds[action.id];
+      boards.allIds.splice(boards.allIds.indexOf(action.id), 1);
+
       return Object.assign({}, state, {
-        boards: [...deleteItem(state.boards, action.id)]
+        boards: { ...boards }
       });
     case ADD_LIST:
+      const newListId = v4();
       return Object.assign({}, state, {
-        lists: [
-          ...state.lists,
-          {
-            id: v4(),
-            boardId: action.boardId,
-            name: action.name
-          }
-        ]
+        boards: {
+          byIds: {
+            ...state.boards.byIds,
+            [action.boardId]: {
+              ...state.boards.byIds[action.boardId],
+              lists: [...state.boards.byIds[action.boardId].lists, newListId]
+            }
+          },
+          allIds: [...state.boards.allIds]
+        },
+        lists: {
+          byIds: {
+            ...state.lists.byIds,
+            [newListId]: {
+              id: newListId,
+              name: action.name,
+              boardId: action.boardId,
+              tasks: []
+            }
+          },
+          allIds: [...state.lists.allIds, newListId]
+        }
       });
     case DELETE_LIST:
       return Object.assign({}, state, {
-        lists: [...deleteItem(state.lists, action.id)]
+        lists: [...state.lists]
       });
     default:
       return state;

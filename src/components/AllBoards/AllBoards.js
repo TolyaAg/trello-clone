@@ -7,9 +7,13 @@ import Board from './Board/Board';
 import './AllBoards.css';
 
 const AllBoard = ({ boards, addBoard, deleteBoard }) => {
-  const boardsList = boards.map(board => (
-    <Link to={`/board/${board.id}`} key={board.id} className="AllBoards__board">
-      <Board {...board} deleteBoard={deleteBoard} />
+  const boardsList = boards.allIds.map(boardId => (
+    <Link
+      to={`/board/${boards.byIds[boardId].id}`}
+      key={boards.byIds[boardId].id}
+      className="AllBoards__board"
+    >
+      <Board {...boards.byIds[boardId]} deleteBoard={deleteBoard} />
     </Link>
   ));
 
