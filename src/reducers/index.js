@@ -83,10 +83,21 @@ function reducer(state = initialState(), action) {
           allIds: [...state.lists.allIds, newListId]
         }
       });
-    case DELETE_LIST:
-      return Object.assign({}, state, {
-        lists: [...state.lists]
-      });
+    case DELETE_LIST: {
+        const {lists, boards} = state;
+        const boardId = lists.byIds[action.id].boardId;
+        const boardLists = boards.byIds[boardId].lists;
+
+        lists.allIds.splice(lists.allIds.indexOf(action.id), 1);
+        boardLists.splice(boardLists.indexOf(action.id), 1);
+
+        delete lists.byIds[action.id];
+
+        return Object.assign({}, state, {
+            boards: {...boards},
+            lists: {...lists}
+        });
+    }
     default:
       return state;
   }
