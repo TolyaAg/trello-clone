@@ -5,29 +5,21 @@ import { ADD_LIST, DELETE_LIST } from '../constants/activeBoardConstants';
 import { v4 } from 'uuid';
 
 const initialState = () => {
-  let info = {};
-  if (localStorage.getItem('boards') === null) {
-    const firstId = v4();
-    info = {
-      boards: {
-        byIds: {
-          [firstId]: {
-            id: firstId,
-            name: 'First',
-            lists: []
-          }
-        },
-        allIds: [firstId]
+  const firstId = v4();
+  const info = {
+    boards: {
+      byIds: {
+        [firstId]: {
+          id: firstId,
+          name: 'First',
+          lists: []
+        }
       },
-      lists: { byIds: {}, allIds: [] },
-      tasks: { byIds: {}, allIds: [] }
-    };
-    const serialBoards = JSON.stringify(info);
-
-    localStorage.setItem('boards', serialBoards);
-  } else {
-    info = JSON.parse(localStorage.getItem('boards'));
-  }
+      allIds: [firstId]
+    },
+    lists: { byIds: {}, allIds: [] },
+    tasks: { byIds: {}, allIds: [] }
+  };
 
   return info;
 };
