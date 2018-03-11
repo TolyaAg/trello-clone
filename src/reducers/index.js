@@ -4,6 +4,8 @@ import { ADD_LIST, DELETE_LIST } from '../constants/activeBoardConstants';
 
 import { v4 } from 'uuid';
 
+const omit = require('lodash/fp/omit');
+
 const initialState = () => {
   const firstId = v4();
   const info = {
@@ -24,34 +26,60 @@ const initialState = () => {
   return info;
 };
 
+function boardReducer(boards, action) {
+  switch (action.type) {
+    case ADD_BOARD: {
+      const newId = v4();
+
+      const byIds =  {
+        ...boards.byIds,
+        [newId]: { id: newId, name: action.name, lists: [] }
+      };
+
+      const allIds = [
+        ...boards.allIds,
+        newId
+      ];
+
+      return {
+        ...boards,
+        byIds: byIds,
+        allIds: allIds
+      };
+    }
+    case DELETE_BOARD: {
+      const byIds  = omit(action.id)(boards.byIds);
+      // delete byIds[action.id];
+      const allIds = boards.allIds.filter((id) => id !== action.id);
+
+      return {
+        ...boards,
+        byIds: byIds,
+        allIds: allIds
+      }
+    }
+    default: {
+      return boards;
+    }
+  }
+}
+
 function reducer(state = initialState(), action) {
   switch (action.type) {
     case ADD_BOARD:
-      const newId = v4();
-      return Object.assign({}, state, {
-        boards: {
-          byIds: {
-            ...state.boards.byIds,
-            [newId]: {
-              id: newId,
-              name: action.name,
-              lists: []
-            }
-          },
-          allIds: [...state.boards.allIds, newId]
-        }
-      });
+      return {
+        ...state,
+        boards: boardReducer(state.boards, action)
+      };
     case DELETE_BOARD:
-      const { boards } = state;
-      delete boards.byIds[action.id];
-      boards.allIds.splice(boards.allIds.indexOf(action.id), 1);
-
-      return Object.assign({}, state, {
-        boards: { ...boards }
-      });
+      return {
+        ...state,
+        boards: boardReducer(state.boards, action)
+      };
     case ADD_LIST:
       const newListId = v4();
-      return Object.assign({}, state, {
+      return {
+        ...state,
         boards: {
           byIds: {
             ...state.boards.byIds,
@@ -74,7 +102,7 @@ function reducer(state = initialState(), action) {
           },
           allIds: [...state.lists.allIds, newListId]
         }
-      });
+      };
     case DELETE_LIST: {
         const {lists, boards} = state;
         const boardId = lists.byIds[action.id].boardId;

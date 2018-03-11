@@ -9,8 +9,8 @@ import './AllBoards.css';
 const AllBoard = ({ boards, addBoard, deleteBoard }) => {
   const boardsList = boards.allIds.map(boardId => (
     <Link
-      to={`/board/${boards.byIds[boardId].id}`}
-      key={boards.byIds[boardId].id}
+      to={`/board/${boardId}`}
+      key={boardId}
       className="AllBoards__board"
     >
       <Board {...boards.byIds[boardId]} deleteBoard={deleteBoard} />
