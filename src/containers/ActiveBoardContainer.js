@@ -6,10 +6,7 @@ import ActiveBoard from '../components/ActiveBoard/ActiveBoard';
 const mapStateToProps = (state, ownProps) => {
   return {
     boardId: ownProps.match.params.id,
-    lists: state.boards.byIds[ownProps.match.params.id].lists.map(
-      listId => state.lists.byIds[listId]
-    ),
-    tasks: []
+    lists: state.boards.byIds[ownProps.match.params.id].lists
   };
 };
 

@@ -1,6 +1,7 @@
 // import { addBoard } from "../actions";
 import { ADD_BOARD, DELETE_BOARD } from '../constants/boardConstants';
 import { ADD_LIST, DELETE_LIST } from '../constants/activeBoardConstants';
+import { ADD_TASK, DELETE_TASK, CHANGE_STATUS } from '../constants/listConstants';
 
 import { v4 } from 'uuid';
 
@@ -26,98 +27,243 @@ const initialState = () => {
   return info;
 };
 
-function boardReducer(boards, action) {
+const boardReducer = (boards, action) => {
   switch (action.type) {
     case ADD_BOARD: {
-      const newId = v4();
 
       const byIds =  {
         ...boards.byIds,
-        [newId]: { id: newId, name: action.name, lists: [] }
+        [action.id]: { id: action.id, name: action.name, lists: [] }
       };
 
       const allIds = [
         ...boards.allIds,
-        newId
+        action.id
       ];
 
       return {
-        ...boards,
-        byIds: byIds,
-        allIds: allIds
+        byIds,
+        allIds
       };
     }
+
     case DELETE_BOARD: {
+
       const byIds  = omit(action.id)(boards.byIds);
-      // delete byIds[action.id];
       const allIds = boards.allIds.filter((id) => id !== action.id);
 
       return {
-        ...boards,
-        byIds: byIds,
-        allIds: allIds
-      }
+        byIds,
+        allIds
+      };
     }
+
+    case ADD_LIST: {
+
+      const byIds = {
+        ...boards.byIds,
+        [action.boardId]: {
+          ...boards.byIds[action.boardId],
+          lists: [...boards.byIds[action.boardId].lists, action.id]
+        }
+      }
+    
+      return {
+        ...boards,
+        byIds
+      };
+    }
+
+    case DELETE_LIST: {
+      const byIds = {
+        ...boards.byIds,
+        [action.boardId]: {
+          ...boards.byIds[action.boardId],
+          lists: boards.byIds[action.boardId].lists.filter(id => id !== action.id)
+        }
+      }
+
+      return {
+        ...boards,
+        byIds
+      };
+    }
+
     default: {
       return boards;
     }
   }
 }
 
+const listReducer = (lists, action) => {
+  switch(action.type) {
+    case ADD_LIST: {
+      const byIds = {
+        ...lists.byIds,
+        [action.id]: {
+          id: action.id,
+          name: action.name,
+          boardId: action.boardId,
+          tasks: []
+        }
+      }
+
+      const allIds = [...lists.allIds, action.id]
+
+      return {
+        byIds,
+        allIds
+      };
+    }
+
+    case DELETE_LIST: {
+      const byIds  = omit(action.id)(lists.byIds);
+      const allIds = lists.allIds.filter((id) => id !== action.id);
+
+      return {
+        byIds,
+        allIds
+      };
+    }
+
+    case ADD_TASK: {
+      const byIds = {
+        ...lists.byIds,
+        [action.listId]: {
+          ...lists.byIds[action.listId],
+          tasks: [...lists.byIds[action.listId].tasks, action.id]
+        }
+      }
+    
+      return {
+        ...lists,
+        byIds
+      };
+    }
+
+    case DELETE_TASK: {
+      const byIds = {
+        ...lists.byIds,
+        [action.listId]: {
+          ...lists.byIds[action.listId],
+          tasks: lists.byIds[action.listId].tasks.filter((id) => id !== action.id)
+        }
+      }
+
+      return {
+        ...lists,
+        byIds
+      };
+    }
+
+    default: {
+      return lists;
+    }
+  }
+}
+
+const taskReducer = (tasks, action) => {
+  switch(action.type) {
+    case ADD_TASK: {
+      const byIds = {
+        ...tasks.byIds,
+        [action.id]: {
+          id: action.id,
+          name: action.name,
+          complited: false
+        }
+      }
+
+      const allIds = [...tasks.allIds, action.id]
+
+      return {
+        byIds,
+        allIds
+      };
+    }
+
+    case DELETE_TASK: {
+      const byIds  = omit(action.id)(tasks.byIds);
+      const allIds = tasks.allIds.filter((id) => id !== action.id);
+
+      return {
+        byIds,
+        allIds
+      };
+    }
+
+    case CHANGE_STATUS: {
+      const byIds = {
+        ...tasks.byIds,
+        [action.id]: {
+          ...tasks.byIds[action.id],
+          complited: !tasks.byIds[action.id].complited
+        }
+      }
+
+      return {
+        ...tasks,
+        byIds
+      };
+    }
+    default: {
+      return tasks
+    }
+  }
+}
+
 function reducer(state = initialState(), action) {
   switch (action.type) {
-    case ADD_BOARD:
+    case ADD_BOARD: {
       return {
         ...state,
         boards: boardReducer(state.boards, action)
       };
-    case DELETE_BOARD:
-      return {
-        ...state,
-        boards: boardReducer(state.boards, action)
-      };
-    case ADD_LIST:
-      const newListId = v4();
-      return {
-        ...state,
-        boards: {
-          byIds: {
-            ...state.boards.byIds,
-            [action.boardId]: {
-              ...state.boards.byIds[action.boardId],
-              lists: [...state.boards.byIds[action.boardId].lists, newListId]
-            }
-          },
-          allIds: [...state.boards.allIds]
-        },
-        lists: {
-          byIds: {
-            ...state.lists.byIds,
-            [newListId]: {
-              id: newListId,
-              name: action.name,
-              boardId: action.boardId,
-              tasks: []
-            }
-          },
-          allIds: [...state.lists.allIds, newListId]
-        }
-      };
-    case DELETE_LIST: {
-        const {lists, boards} = state;
-        const boardId = lists.byIds[action.id].boardId;
-        const boardLists = boards.byIds[boardId].lists;
-
-        lists.allIds.splice(lists.allIds.indexOf(action.id), 1);
-        boardLists.splice(boardLists.indexOf(action.id), 1);
-
-        delete lists.byIds[action.id];
-
-        return Object.assign({}, state, {
-            boards: {...boards},
-            lists: {...lists}
-        });
     }
+    case DELETE_BOARD: {
+      return {
+        ...state,
+        boards: boardReducer(state.boards, action)
+      };
+    }
+    case ADD_LIST: {
+      return {
+        ...state,
+        boards: boardReducer(state.boards, action),
+        lists: listReducer(state.lists, action)
+      };
+    }
+    case DELETE_LIST: {
+      return {
+        ...state,
+        boards: boardReducer(state.boards, action),
+        lists: listReducer(state.lists, action)
+      };
+    }
+
+    case ADD_TASK: {
+      return {
+        ...state,
+        lists: listReducer(state.lists, action),
+        tasks: taskReducer(state.tasks, action)
+      }
+    }
+
+    case DELETE_TASK: {
+      return {
+        ...state,
+        lists: listReducer(state.lists, action),
+        tasks: taskReducer(state.tasks, action)
+      }
+    }
+
+    case CHANGE_STATUS: {
+      return {
+        ...state,
+        tasks: taskReducer(state.tasks, action)
+      }
+    }
+
     default:
       return state;
   }
