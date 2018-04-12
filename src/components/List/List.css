@@ -1,0 +1,53 @@
+.List {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 24px 24px 0;
+    padding: 24px 8px;
+
+    /* justify-content: center; */
+    /* align-items: center; */
+
+    font-size: 18px;
+    font-weight: bold;
+
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    border-radius: 5px;
+}
+
+.List__title {
+    position: relative;
+}
+
+.List__delete-button {
+    position: absolute;
+    top: -4px;
+    right: 8px;
+
+    width: 30px;
+    height: 30px;
+
+    color: red;
+    font-size: 22px;
+    font-weight: bold;
+
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 50%;
+
+    cursor: pointer;
+    outline: none;
+
+    transition: box-shadow 0.2s ease-in; 
+
+    transform: rotate(45deg)
+}
+
+.List__delete-button:hover {
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.List__input {
+    margin-bottom: 16px;
+}
